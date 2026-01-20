@@ -30,11 +30,13 @@ func TestE2EAPIWorkflow(t *testing.T) {
 	require.NoError(t, err)
 	defer container.Terminate(ctx)
 
-	// Get the mapped port
+	// Get the host and mapped port
+	host, err := container.Host(ctx)
+	require.NoError(t, err)
 	port, err := container.MappedPort(ctx, "8080")
 	require.NoError(t, err)
-	adminURL := fmt.Sprintf("http://127.0.0.1:%s/__admin/mappings", port.Port())
-	mockURL := fmt.Sprintf("http://127.0.0.1:%s/mock-endpoint", port.Port())
+	adminURL := fmt.Sprintf("http://%s:%s/__admin/mappings", host, port.Port())
+	mockURL := fmt.Sprintf("http://%s:%s/mock-endpoint", host, port.Port())
 
 	// Set up mock for POST
 	postMapping := map[string]interface{}{
