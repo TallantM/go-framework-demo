@@ -20,6 +20,7 @@ Verify prerequisites:
 4. Build the project: `go build` (optional, verifies compilation)
 
 ## Folder Structure
+```text
 go-framework-demo/
 ├── internal/
 │   └── utils/
@@ -37,6 +38,7 @@ go-framework-demo/
 └── .github/
     └── workflows/
         └── ci.yml          # GitHub Actions CI workflow
+```
 
 ## Testing Overview
 This repository demonstrates unit and integration testing in Go, using a public API (jsonplaceholder.typicode.com) for integration scenarios.
@@ -44,21 +46,27 @@ This repository demonstrates unit and integration testing in Go, using a public 
 - **Integration Tests**: HTTP requests to public APIs for real-world validation, with mocking for isolation and multiple scenarios (e.g., `tests/integration/api_test.go`).
 
 ## Running Tests Locally
+
+```bash
 For rapid development, run tests directly on your host:
 go test ./...
-
+```
 
 For consistency with CI, use Docker (recommended before pushing):
+```bash
 docker build -t go-framework-demo .
 docker run go-framework-demo
+```
 
 Run with race detection:
+```bash
 go test -race ./...
-
+```
 Generate coverage report:
+```bash
 go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out
-
+```
 
 ## CI/CD
 GitHub Actions workflow in `.github/workflows/ci.yml` builds the Docker image and runs tests exclusively in the container on push/pull requests, ensuring environmental consistency.
@@ -66,9 +74,6 @@ GitHub Actions workflow in `.github/workflows/ci.yml` builds the Docker image an
 ## Troubleshooting
 - **Test Failures**: Ensure dependencies are installed (`go mod tidy`). For integration tests, check network connectivity to jsonplaceholder.typicode.com.
 - **CI Failures**: Review logs for module cache or Docker issues.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 Contributions are welcome. Fork the repository, create a feature branch, and submit a pull request.
