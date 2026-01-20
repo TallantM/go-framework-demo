@@ -1,0 +1,5 @@
+*.exe
+*.test
+.vscode/
+.DS_Store
+coverage.out
