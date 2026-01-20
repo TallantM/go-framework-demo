@@ -1,6 +1,6 @@
 # Automated Testing Go Demo [![CI](https://github.com/TallantM/go-framework-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/TallantM/go-framework-demo/actions/workflows/ci.yml)
 
-A demonstration of unit and integration testing in Go, using public APIs like jsonplaceholder.typicode.com for real-world scenarios, reusable utilities, and a GitHub Actions CI workflow for scalable quality assurance.
+A client project demonstration showcasing unit and integration testing in Go, incorporating reusable utilities, layered test suites, and a GitHub Actions CI workflow with Docker containerization for reliable quality assurance.
 
 ## Prerequisites
 - Go 1.21+
