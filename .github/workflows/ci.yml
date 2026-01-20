@@ -32,7 +32,7 @@ jobs:
       run: docker build -t go-framework-demo .
 
     - name: Test in Docker
-      run: docker run -v /var/run/docker.sock:/var/run/docker.sock -e DOCKER_HOST=unix:///var/run/docker.sock automated-testing-go-demo
+      run: docker run -v /var/run/docker.sock:/var/run/docker.sock -e DOCKER_HOST=unix:///var/run/docker.sock go-framework-demo
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4
