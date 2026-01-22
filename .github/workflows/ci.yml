@@ -22,7 +22,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/go/pkg/mod
-        key: $$   {{ runner.os }}-go-   $${{ hashFiles('**/go.sum') }}
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: ${{ runner.os }}-go-
 
     - name: Download Dependencies
@@ -32,7 +32,7 @@ jobs:
       run: docker build -t go-framework-demo .
 
     - name: Test in Docker
-      run: docker run -v /var/run/docker.sock:/var/run/docker.sock -e DOCKER_HOST=unix:///var/run/docker.sock go-framework-demo
+      run: docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock -e DOCKER_HOST=unix:///var/run/docker.sock go-framework-demo
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4
@@ -40,28 +40,25 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.out
         fail_ci_if_error: true
-      
+
     - name: Install benchstat
       run: go install golang.org/x/perf/cmd/benchstat@latest
-    
+
     - name: Cache Benchmark Results
       uses: actions/cache@v4
       with:
         path: old_bench.txt
         key: ${{ runner.os }}-benchmarks-${{ github.ref }}
         restore-keys: ${{ runner.os }}-benchmarks-
-    
+
     - name: Run Benchmarks
-      run: |
-        # Run 5 times for statistical significance
-        go test -bench=. -benchmem -count=5 ./tests/benchmarks > new_bench.txt
-    
+      run: go test -bench=. -benchmem -count=5 ./tests/benchmarks > new_bench.txt
+
     - name: Compare Benchmarks
       run: |
         if [ -f old_bench.txt ]; then
           benchstat old_bench.txt new_bench.txt > comparison.txt
           cat comparison.txt
-          # Fail on significant regression
           if grep -q "regression" comparison.txt; then
             echo "Benchmark regression detected!"
             exit 1

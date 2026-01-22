@@ -11,11 +11,15 @@ RUN go mod download
 COPY . .
 
 # Add a custom entrypoint script to wait for Docker daemon
-RUN echo '#!/bin/bash' > /entrypoint.sh && \
-    echo 'set -e' >> /entrypoint.sh && \
-    echo 'dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 > /dev/null 2>&1 &' >> /entrypoint.sh && \
-    echo 'until docker info > /dev/null 2>&1; do sleep 1; done' >> /entrypoint.sh && \
-    echo 'exec go test ./... -bench=. -short' >> /entrypoint.sh && \
-    chmod +x /entrypoint.sh
+RUN echo '#!/bin/sh' > /tmp/entrypoint.sh && \
+    echo 'set -e' >> /tmp/entrypoint.sh && \
+    echo 'dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 > /dev/null 2>&1 &' >> /tmp/entrypoint.sh && \
+    echo 'until docker info > /dev/null 2>&1; do sleep 1; done' >> /tmp/entrypoint.sh && \
+    echo 'export DOCKER_HOST=unix:///var/run/docker.sock' >> /tmp/entrypoint.sh && \
+    echo 'export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock' >> /tmp/entrypoint.sh && \
+    echo 'export TESTCONTAINERS_RYUK_DISABLED=true' >> /tmp/entrypoint.sh && \
+    echo 'exec go test ./... -bench=.' >> /tmp/entrypoint.sh && \
+    chmod +x /tmp/entrypoint.sh && \
+    cp /tmp/entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT ["go", "test", "./...", "-coverprofile=coverage.out"]
+ENTRYPOINT ["/entrypoint.sh"]
