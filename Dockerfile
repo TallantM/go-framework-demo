@@ -18,7 +18,7 @@ RUN echo '#!/bin/sh' > /tmp/entrypoint.sh && \
     echo 'export DOCKER_HOST=unix:///var/run/docker.sock' >> /tmp/entrypoint.sh && \
     echo 'export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock' >> /tmp/entrypoint.sh && \
     echo 'export TESTCONTAINERS_RYUK_DISABLED=true' >> /tmp/entrypoint.sh && \
-    echo 'exec go test ./... -bench=.' >> /tmp/entrypoint.sh && \
+    echo 'exec go test ./... -bench=. -coverprofile=coverage.out -coverpkg=github.com/TallantM/go-framework-demo/internal/utils' >> /tmp/entrypoint.sh && \
     chmod +x /tmp/entrypoint.sh && \
     cp /tmp/entrypoint.sh /entrypoint.sh
 
